@@ -1,12 +1,21 @@
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+
 local textLabel = game.Players.LocalPlayer.PlayerGui.MainGui.PaintFrame.NextButton.Label
+local nextButton = game.Players.LocalPlayer.PlayerGui.MainGui.PaintFrame.NextButton
+local nameButton = game.Players.LocalPlayer.PlayerGui.MainGui.ArtDetailsFrame.ArtName.TextBox
+local finishButton = game.Players.LocalPlayer.PlayerGui.MainGui.ArtDetailsFrame.FinishButton
+
 _G.timeout = ""
 _G.timer = ""
-_G.payment_id = ""
+_G.auto_submit = ""
+_G.art_name = ""
+_G.auto_message = ""
+_G.message = ""
 mins = 5
 secs = 0
 
-local Window = OrionLib:MakeWindow({Name = "Hanging Artist v1.3", IntroEnabled = false})
+local Window = OrionLib:MakeWindow({Name = "Hanging Artist v1.3 | up the ra 🇮🇪", IntroEnabled = false})
+
 
 -- _____________ TABS _____________ --   
 
@@ -28,8 +37,13 @@ local Tab3 = Window:MakeTab({
 	PremiumOnly = false
 })
 
-
 local Tab4 = Window:MakeTab({
+	Name = "Auto Message",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local Tab5 = Window:MakeTab({
 	Name = "Options",
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
@@ -37,26 +51,58 @@ local Tab4 = Window:MakeTab({
 
 -- _____________ DROPDOWNS, TOGGLES & TEXTBOXES _____________ --
 
-Tab3:AddLabel("Auto Submit Toggle & Settings")
+Tab3:AddToggle({
+	Name = "Auto-Submit",
+	Default = false,
+	Callback = function(Value)
+		auto_submit = Value
+        print(auto_submit)
+	end    
+})
 
 Tab3:AddTextbox({
-	Name = "Textbox",
-	Default = "default box input",
+	Name = "Art name",
+	Default = "",
 	TextDisappear = true,
 	Callback = function(Value)
-		payment_id = Value
+		message = Value
+	end	  
+})
+
+Tab4:AddToggle({
+	Name = "Auto-Message",
+	Default = false,
+	Callback = function(Value)
+		auto_message = Value
+        while auto_message == true do
+                game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(message,"All")
+                wait(16)
+        end
+	end    
+})
+
+
+Tab4:AddTextbox({
+	Name = "Message Context",
+	Default = "",
+	TextDisappear = true,
+	Callback = function(Value)
+		message = Value
+        print(message)
 	end	  
 })
 
 
-Tab4:AddToggle({
+Tab5:AddToggle({
 	Name = "Delay",
 	Default = false,
 	Callback = function(Value)
 		timeout = Value
+        print(timeout)
+        
 	end    
 })
-Tab4:AddToggle({
+Tab5:AddToggle({
 	Name = "Timer",
 	Default = false,
 	Callback = function(Value)
@@ -107,9 +153,27 @@ Tab:AddDropdown({
             wait(1.05)
 
         until mins == 0 and secs == 0
+        mins = 5
+        secs = 0
         textLabel.Text = ("Ready!!")            
 	    end
     
+        if auto_submit == true then
+            print("Auto submitting rn")
+            for i,v in pairs(getconnections(nextButton.MouseButton1Click)) do
+                v:Function()
+            end
+
+            wait(2)
+
+            nameButton.Text = "Text LABEL!!!!!!!!!!!!!!!!!"
+
+            wait(2)
+
+            for i,v in pairs(getconnections(finishButton.MouseButton1Click)) do
+            v:Function()
+            end    
+        end
     end
 })
 

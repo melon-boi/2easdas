@@ -44,7 +44,7 @@ local Tab4 = Window:MakeTab({
 })
 
 local Tab5 = Window:MakeTab({
-	Name = "Options",
+	Name = "Visuals",
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
 })
